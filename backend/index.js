@@ -1,15 +1,19 @@
-import express from "express";
 import { configDotenv } from "dotenv";
 import authRoute from "./routes/auth.routes.js";
+import dataRoute from "./routes/data.routes.js";
+import employeeRoute from "./routes/employee.routes.js";
 import connectToMongoDB from "./db/connectToMongodb.js";
 import MongoStore from "connect-mongo";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import express from "express";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 
 configDotenv();
 const app = express();
 
-app.use(express.json({ limit: "1KB" }));
+app.use(express.json());
 app.use(cookieParser());
 
 app.use(
@@ -31,6 +35,12 @@ app.use(
 );
 
 app.use("/api/auth", authRoute);
+app.use("/api/data", dataRoute);
+app.use("/api/employee", employeeRoute);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.use("/api/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.listen(process.env.PORT || 5000, () => {
   connectToMongoDB();
