@@ -57,6 +57,7 @@ const Page = () => {
                   key={item._id}
                   siteName={item.siteName}
                   image={item.items[0]}
+                  id={item._id}
                 />
               </>
             );
