@@ -78,8 +78,8 @@ const config = {
   },
   plugins: [
     require("tailwindcss-animate"),
+    //flowbite.plugin(),
     require("daisyui"),
-    flowbite.plugin(),
   ],
 
   daisyui: {
