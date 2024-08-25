@@ -23,8 +23,8 @@ const Page = () => {
     <>
       <Header />
       <div className="flex w-screen bg-[url('/bg.jpg')] min-h-screen bg-fixed bg-no-repeat bg-cover">
-        <details className="dropdown mt-[110px] fixed left-12">
-          <summary className="btn m-1 border border-black">
+        <details className="dropdown mt-[110px] fixed left-9 md:left-12">
+          <summary className="btn m-1">
             <Filter /> Filters
           </summary>
           <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-[300px] p-2 shadow">
@@ -57,6 +57,7 @@ const Page = () => {
                   key={item._id}
                   siteName={item.siteName}
                   image={item.items[0]}
+                  tags={item.items}
                   id={item._id}
                 />
               </>

@@ -5,7 +5,6 @@ const siteSchema = new mongoose.Schema(
     siteName: {
       type: String,
       required: true,
-      minlength: 1,
     },
     items: [],
   },
