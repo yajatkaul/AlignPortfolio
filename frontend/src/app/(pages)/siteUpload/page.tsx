@@ -12,8 +12,8 @@ const Page = () => {
   const { upload } = useUploadFiles();
 
   const addItem = () => {
-    if (data.length === 10) {
-      return toast.error("Only 10 images can be uploaded");
+    if (data.length === 80) {
+      return toast.error("Only 80 images can be uploaded");
     }
     setData([...data, [null, ""]]);
   };

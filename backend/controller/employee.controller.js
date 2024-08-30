@@ -9,7 +9,6 @@ export const createSiteData = async (req, res) => {
     const { siteName, image, categores } = req.body;
 
     const items = zip(filePaths, convertToArray(categores));
-    console.log(items);
 
     const newSite = new Site({
       siteName: siteName,

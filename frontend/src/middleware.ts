@@ -58,7 +58,7 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    if (data.exists && data.result && !data.roles.includes("Partner")) {
+    if (data.exists && data.result && !data.roles.includes("Employee")) {
       if (employeeRoutes.some((route) => pathnameMatches(route, pathname))) {
         return NextResponse.redirect(new URL("/", request.url));
       }

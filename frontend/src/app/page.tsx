@@ -23,7 +23,6 @@ const Page = () => {
   useEffect(() => {
     updateFilterB();
     localStorage.setItem("Filters", filters);
-    console.log(filters);
   }, [filters]);
 
   return (

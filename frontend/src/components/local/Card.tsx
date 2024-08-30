@@ -17,7 +17,7 @@ const Card = ({ siteName, image, id, tags }) => {
         <img
           src={`/api${image ? image[0] : ""}`}
           alt=""
-          className="w-[350px] h-[350px] object-cover rounded-[30px]"
+          className="w-[300px] h-[300px] md:w-[350px] md:h-[350px] object-cover rounded-[30px]"
         />
         <p>{siteName}</p>
         <p className="flex flex-wrap">

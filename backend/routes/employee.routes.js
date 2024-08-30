@@ -8,7 +8,7 @@ const router = express.Router();
 router.post(
   "/createSiteData",
   checkPerms,
-  upload.array("image", 10),
+  upload.array("image", 80),
   createSiteData
 );
 

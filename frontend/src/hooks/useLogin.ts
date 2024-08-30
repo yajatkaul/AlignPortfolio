@@ -28,7 +28,7 @@ const useLogin = () => {
         throw new Error(data.error);
       }
 
-      await localStorage.setItem("Auth", JSON.stringify(data));
+      localStorage.setItem("Auth", JSON.stringify(data));
 
       await setAuthUser(data.details);
 
