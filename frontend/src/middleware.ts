@@ -9,6 +9,7 @@ export async function middleware(request: NextRequest) {
     "/forgetpassword",
   ];
   const protectedRoutes = ["/"];
+  const employeeRoutes = ["/siteUpload"];
   const unverifiedRoutes = ["/verify"];
 
   try {
@@ -56,6 +57,12 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/", request.url));
       }
     }
+
+    if (data.exists && data.result && !data.roles.includes("Partner")) {
+      if (employeeRoutes.some((route) => pathnameMatches(route, pathname))) {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+    }
   } catch (err) {
     console.error("Error during authentication check:", err);
     return new NextResponse("Internal Server Error", { status: 500 });
@@ -84,5 +91,6 @@ export const config = {
     "/approval",
     "/approval/:path*",
     "/guide",
+    "/siteUpload",
   ],
 };
