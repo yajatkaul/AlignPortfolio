@@ -19,8 +19,11 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form className="flex flex-col" onSubmit={handleVerification}>
+    <div className="flex justify-center items-center h-screen bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover">
+      <form
+        className="flex flex-col bg-[#E0D7CF] h-[400px] rounded-[40px] justify-center items-center border border-black"
+        onSubmit={handleVerification}
+      >
         <p className="flex justify-center items-center text-[40px]">Verify</p>
         <div className="flex flex-col justify-center items-center p-4 max-w-[400px] gap-4 rounded-[30px]">
           <InputOTP

@@ -24,17 +24,18 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover">
       <div className="flex">
         <div>
           <img
-            src="/authImg.png"
+            src="/authImage.png"
             alt="image"
             className="max-h-[600px] rounded-l-[30px] hidden md:flex min-h-[500px] object-cover"
           />
         </div>
         <form className="flex" onSubmit={handleForget}>
-          <div className="flex flex-col justify-center items-center p-4 max-w-[400px] gap-4 rounded-[30px] md:rounded-none md:rounded-r-[30px]">
+          <div className="flex flex-col justify-center items-center p-4 max-w-[400px] gap-4 rounded-[30px] md:rounded-none md:rounded-r-[30px] bg-[#E0D7CF]">
+            <img src="/Logo.png" className="w-[250px] mb-[30px]" />
             {submit ? (
               <>
                 <div className="flex flex-col gap-10 w-[250px] justify-center items-center">

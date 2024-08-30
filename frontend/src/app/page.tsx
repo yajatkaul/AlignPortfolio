@@ -3,21 +3,28 @@
 import Card from "@/components/local/Card";
 import Header from "@/components/local/Header";
 import useGetSites from "@/hooks/useGetSites";
-import { Filter } from "lucide-react";
+import { Filter, FilterX } from "lucide-react";
 import toggleButtons from "../json/toggleButtons.json";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useFilterContext } from "@/context/FilterContext";
 
 const Page = () => {
-  const { loading, sites } = useGetSites();
-  const [selectedButtons, setSelectedButtons] = useState([]);
+  const { sites, setPageB, updateFilterB } = useGetSites();
+  const { filters, setFilters } = useFilterContext();
 
   const handleButtonClick = (item: string) => {
-    setSelectedButtons((prevSelectedButtons) =>
+    setFilters((prevSelectedButtons) =>
       prevSelectedButtons.includes(item)
         ? prevSelectedButtons.filter((button) => button !== item)
         : [...prevSelectedButtons, item]
     );
   };
+
+  useEffect(() => {
+    updateFilterB();
+    localStorage.setItem("Filters", filters);
+    console.log(filters);
+  }, [filters]);
 
   return (
     <>
@@ -25,12 +32,20 @@ const Page = () => {
       <div className="flex w-screen bg-[url('/bg.jpg')] min-h-screen bg-fixed bg-no-repeat bg-cover">
         <details className="dropdown mt-[110px] fixed left-9 md:left-12">
           <summary className="btn m-1">
-            <Filter /> Filters
+            {filters && filters.length !== 1 ? (
+              <>
+                <FilterX /> Filters
+              </>
+            ) : (
+              <>
+                <Filter /> Filters
+              </>
+            )}
           </summary>
           <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-[300px] p-2 shadow">
             <div className="flex flex-wrap">
               {toggleButtons.items.map((item) => {
-                const isSelected = selectedButtons.includes(item);
+                const isSelected = filters?.includes(item);
 
                 return (
                   <button
@@ -52,15 +67,13 @@ const Page = () => {
         <div className="mt-[120px] w-full flex flex-wrap gap-4 pl-[40px] pr-[40px]">
           {sites?.map((item) => {
             return (
-              <>
-                <Card
-                  key={item._id}
-                  siteName={item.siteName}
-                  image={item.items[0]}
-                  tags={item.items}
-                  id={item._id}
-                />
-              </>
+              <Card
+                key={item._id}
+                siteName={item.siteName}
+                image={item.items[0]}
+                tags={item.items}
+                id={item._id}
+              />
             );
           })}
         </div>
