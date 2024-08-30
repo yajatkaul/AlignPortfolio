@@ -64,7 +64,7 @@ const Page = () => {
             </div>
           </ul>
         </details>
-        <div className="mt-[120px] w-full flex flex-wrap gap-4 pl-[40px] pr-[40px]">
+        <div className="mt-[170px] w-full flex flex-wrap gap-4 pl-[40px] pr-[40px]">
           {sites?.map((item) => {
             return (
               <Card
