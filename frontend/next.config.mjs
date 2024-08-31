@@ -3,7 +3,7 @@ export default {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:5000/api/:path*", // Proxy to the external API
+        destination: "http://localhost:4000/api/:path*", // Proxy to the external API
       },
     ];
   },
