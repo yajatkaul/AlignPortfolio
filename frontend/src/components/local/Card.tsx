@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 
 const Card = ({ siteName, image, id, tags }) => {
   const router = useRouter();
-  tags = tags.map((tag) => tag[1]);
+
+  tags = [...new Set(tags.map((tag) => tag[1]))];
 
   return (
     <div
