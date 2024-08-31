@@ -20,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <link rel="icon" href="/TabImg.png" />
+      <head>
+        <link rel="icon" href="/TabImg.png" />
+      </head>
       <body className={inter.className}>
         <AuthContextProvider>
           <FilterContextProvider>

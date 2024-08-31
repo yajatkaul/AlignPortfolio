@@ -11,7 +11,6 @@ interface SignupProps {
 }
 
 const useSignup = () => {
-  // @ts-expect-error
   const { setAuthUser } = useAuthContext();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -35,7 +34,7 @@ const useSignup = () => {
         throw new Error(data.error);
       }
 
-      await localStorage.setItem("Auth", JSON.stringify(data));
+      localStorage.setItem("Auth", JSON.stringify(data));
 
       await setAuthUser(data.details);
 

@@ -1,45 +1,44 @@
 "use client";
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-  Dispatch,
-  SetStateAction,
-} from "react";
+
+import ClientOnly from "@/components/local/ClientOnly";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 interface AuthContextType {
-  authUser: any | null;
-  setAuthUser: Dispatch<SetStateAction<any | null>>;
+  authUser: any;
+  setAuthUser: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
+const AuthContext = createContext<AuthContextType | null>(null);
 
-export const useAuthContext = () => {
-  return useContext(AuthContext);
-};
-
-interface AuthContextProviderProps {
-  children: ReactNode;
-}
-
-export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [authUser, setAuthUser] = useState<any | null>(null);
+export const AuthContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [authUser, setAuthUser] = useState<any>(null);
 
   useEffect(() => {
-    // @ts-expect-error
-    const storedUser = JSON.parse(localStorage.getItem("Auth"));
-    if (storedUser?.details) {
-      setAuthUser(storedUser.details);
+    const storedAuth = localStorage.getItem("Auth");
+    if (storedAuth) {
+      setAuthUser(JSON.parse(storedAuth).details);
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authUser, setAuthUser }}>
-      {children}
-    </AuthContext.Provider>
+    <ClientOnly>
+      <AuthContext.Provider value={{ authUser, setAuthUser }}>
+        {children}
+      </AuthContext.Provider>
+    </ClientOnly>
   );
+};
+
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error(
+      "useAuthContext must be used within an AuthContextProvider"
+    );
+  }
+  return context;
 };

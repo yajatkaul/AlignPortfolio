@@ -1,7 +1,7 @@
 "use client";
 import useLogin from "@/hooks/useLogin";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Page = () => {
   const router = useRouter();
