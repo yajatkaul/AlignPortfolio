@@ -21,10 +21,16 @@ const Page = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover">
       <form
-        className="flex flex-col bg-[#E0D7CF] h-[400px] rounded-[40px] justify-center items-center border border-black"
+        className="flex flex-col bg-[#E0D7CF] h-[400px] rounded-[40px] justify-center items-center"
         onSubmit={handleVerification}
       >
-        <p className="flex justify-center items-center text-[40px]">Verify</p>
+        <img src="/logo.png" alt="" className="flex w-[200px] mb-[30px]" />
+
+        <p className="flex justify-center items-center text-[40px] font-bold">
+          Verify
+        </p>
+        <p>Kindly check your inbox for the</p>
+        <p>verification code</p>
         <div className="flex flex-col justify-center items-center p-4 max-w-[400px] gap-4 rounded-[30px]">
           <InputOTP
             maxLength={6}
@@ -32,15 +38,15 @@ const Page = () => {
             onChange={(e) => setOtp({ ...otp, token: e })}
           >
             <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
+              <InputOTPSlot index={0} className="border border-black" />
+              <InputOTPSlot index={1} className="border border-black" />
+              <InputOTPSlot index={2} className="border border-black" />
             </InputOTPGroup>
             <InputOTPSeparator />
             <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
+              <InputOTPSlot index={3} className="border border-black" />
+              <InputOTPSlot index={4} className="border border-black" />
+              <InputOTPSlot index={5} className="border border-black" />
             </InputOTPGroup>
           </InputOTP>
           <button className="btn w-full">Submit</button>
