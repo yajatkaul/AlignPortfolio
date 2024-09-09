@@ -29,7 +29,7 @@ const Page = () => {
         <p className="flex justify-center items-center text-[40px] font-bold">
           Verify
         </p>
-        <p>Kindly check your inbox for the</p>
+        <p className="p-2">Kindly check your inbox/spam/promotions for the</p>
         <p>verification code</p>
         <div className="flex flex-col justify-center items-center p-4 max-w-[400px] gap-4 rounded-[30px]">
           <InputOTP

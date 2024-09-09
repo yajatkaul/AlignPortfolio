@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const authUrl = "http://localhost:4000/api/auth/checkAuth";
+  const authUrl = "http://localhost:5000/api/auth/checkAuth";
   const publicRoutes = [
     "/login",
     "/signup",

@@ -39,7 +39,7 @@ const useSignup = () => {
       await setAuthUser(data.details);
 
       toast.success("Success");
-      router.push("/");
+      router.push("/verify");
     } catch (err: any) {
       toast.error(err.message);
       console.log(err);

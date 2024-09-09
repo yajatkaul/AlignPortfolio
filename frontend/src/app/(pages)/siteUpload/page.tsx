@@ -9,7 +9,7 @@ import useUploadFiles from "@/hooks/useUploadFile";
 const Page = () => {
   const [data, setData] = useState([]);
   const [name, setName] = useState();
-  const { upload } = useUploadFiles();
+  const { loading, upload } = useUploadFiles();
 
   const addItem = () => {
     if (data.length === 80) {
@@ -31,6 +31,9 @@ const Page = () => {
   };
 
   const create = () => {
+    if (!name) {
+      toast.error("Enter site name");
+    }
     upload(name, data);
   };
 
@@ -116,9 +119,15 @@ const Page = () => {
               </button>
             </div>
 
-            <button className="btn" onClick={create}>
-              Create
-            </button>
+            {loading ? (
+              <button className="btn">
+                <span className="loading loading-ring loading-lg"></span>
+              </button>
+            ) : (
+              <button className="btn" onClick={create}>
+                Create
+              </button>
+            )}
           </div>
         </div>
       </div>
