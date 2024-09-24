@@ -5,11 +5,6 @@ import { createSiteData } from "../controller/employee.controller.js";
 
 const router = express.Router();
 
-router.post(
-  "/createSiteData",
-  checkPerms,
-  upload.array("image", 80),
-  createSiteData
-);
+router.post("/createSiteData", checkPerms, upload.any(), createSiteData);
 
 export default router;

@@ -8,7 +8,7 @@ const Header = () => {
   const { loading, logout } = useLogout();
   return (
     <>
-      <div className="bg-[#e0d4c4] flex w-screen fixed h-[100px] justify-between">
+      <div className="bg-[#e0d4c4] flex w-screen fixed h-[100px] justify-between pr-[20px]">
         <img
           src="/Logo.png"
           alt=""
