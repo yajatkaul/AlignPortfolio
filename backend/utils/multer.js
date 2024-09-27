@@ -16,13 +16,15 @@ const fileFilter = (req, file, cb) => {
     "image/gif",
     "image/webp",
     "image/jpg",
+    "video/mp4",
+    "video/mkv",
   ];
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(
       new Error(
-        "Invalid file type. Only JPEG, PNG, GIF, and WEBP files are allowed."
+        "Invalid file type. Only JPEG, PNG, GIF, MP4, MKV and WEBP files are allowed."
       ),
       false
     );

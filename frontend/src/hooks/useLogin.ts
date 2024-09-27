@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/context/AuthContext";
 
 interface LoginProps {
-  email: string;
+  number: string;
   password: string;
 }
 
@@ -13,13 +13,13 @@ const useLogin = () => {
   const [loading, setLoading] = useState(false);
   // @ts-ignore
   const { setAuthUser } = useAuthContext();
-  const login = async ({ email, password }: LoginProps) => {
+  const login = async ({ number, password }: LoginProps) => {
     try {
       setLoading(true);
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ number, password }),
       });
 
       const data = await res.json();
@@ -30,7 +30,7 @@ const useLogin = () => {
 
       localStorage.setItem("Auth", JSON.stringify(data));
 
-      await setAuthUser(data.details);
+      setAuthUser(data.details);
 
       toast.success("Logged in");
       router.push("/");

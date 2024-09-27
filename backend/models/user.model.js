@@ -8,24 +8,17 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 5,
     },
-    email: {
+    number: {
       type: String,
       required: true,
       unique: true,
     },
-    password: {
-      type: String,
-      required: true,
-      minlength: 5,
-    },
+    type: { type: String, required: true },
+    location: { type: String, required: true },
     role: {
       type: String,
       default: "Member",
       enum: ["Member", "Employee", "Admin"],
-    },
-    verifiedEmail: {
-      type: Boolean,
-      default: false,
     },
     verificationToken: {
       type: String,
@@ -33,8 +26,6 @@ const userSchema = new mongoose.Schema(
     verificationTokenExpiresAt: {
       type: Date,
     },
-    resetPasswordToken: String,
-    resetPasswordExpiresAt: Date,
   },
   { timestamps: true }
 );

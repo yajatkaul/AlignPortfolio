@@ -4,10 +4,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 interface SignupProps {
-  email: string;
+  number: string;
   displayName: string;
-  password: string;
-  confirmPassword: string;
+  type: string;
+  location: string;
 }
 
 const useSignup = () => {
@@ -15,17 +15,17 @@ const useSignup = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const signup = async ({
-    email,
+    number,
     displayName,
-    password,
-    confirmPassword,
+    type,
+    location,
   }: SignupProps) => {
     try {
       setLoading(true);
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, displayName, password, confirmPassword }),
+        body: JSON.stringify({ number, displayName, type, location }),
       });
 
       const data = await res.json();
@@ -34,12 +34,7 @@ const useSignup = () => {
         throw new Error(data.error);
       }
 
-      localStorage.setItem("Auth", JSON.stringify(data));
-
-      await setAuthUser(data.details);
-
-      toast.success("Success");
-      router.push("/verify");
+      toast.success("Account created successfully");
     } catch (err: any) {
       toast.error(err.message);
       console.log(err);

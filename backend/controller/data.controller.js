@@ -40,3 +40,16 @@ export const getSite = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const removeSite = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await Site.findByIdAndDelete(id);
+
+    res.status(200).json({ result: "Deleted Successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

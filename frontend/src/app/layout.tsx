@@ -23,7 +23,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/TabImg.png" />
       </head>
-      <body className={inter.className}>
+      <body
+        className={`${inter.className} bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover min-h-screen`}
+      >
         <AuthContextProvider>
           <FilterContextProvider>
             <ThemeProvider attribute="class" defaultTheme="light">

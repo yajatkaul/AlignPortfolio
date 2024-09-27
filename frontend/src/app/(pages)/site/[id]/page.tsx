@@ -1,12 +1,16 @@
 // @ts-nocheck
 "use client";
 import Header from "@/components/local/Header";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Carousel } from "flowbite-react";
 import useGetSite from "@/hooks/useGetSite";
 import { useFilterContext } from "@/context/FilterContext";
+import { MoveLeft, MoveRight, Trash2 } from "lucide-react";
+import useRemoveSite from "@/hooks/useRemoveSite";
 
 const Page = ({ params }: { params: { id: string } }) => {
+  var totalImages;
+  const { removeSite } = useRemoveSite(params.id);
   const [selectedImage, setSelectedImage] = useState();
   const [showImage, setShowImage] = useState(false);
   const { loading, site } = useGetSite(params.id);
@@ -25,18 +29,43 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const createDictionaryByType = (items) => {
     const dictionary = {};
+    const indexToAddress = {};
+    let imageIndex = 0; // Separate counter for images
 
     items.forEach(([address, type]) => {
-      if (!dictionary[type]) {
-        dictionary[type] = [];
-      }
-      dictionary[type].push([address, type]);
-    });
+      const fileExtension = address.split(".").pop();
 
-    return dictionary;
+      if (fileExtension !== "mp4" && fileExtension !== "mkv") {
+        if (!dictionary[type]) {
+          dictionary[type] = [];
+        }
+
+        // Push address, type, and index (using imageIndex) into dictionary
+        dictionary[type].push([address, type, imageIndex]);
+
+        // Map imageIndex to address
+        indexToAddress[imageIndex] = address;
+
+        // Increment imageIndex only for images
+        imageIndex++;
+      } else {
+        // For videos, add without an index
+        if (!dictionary[type]) {
+          dictionary[type] = [];
+        }
+        dictionary[type].push([address, type]);
+      }
+    });
+    totalImages = Object.keys(indexToAddress).length;
+    //console.log(totalImages);
+    return { dictionary, indexToAddress };
   };
 
-  const imagesDictionary = imagesToShow
+  const { dictionary: imagesDictionary = {} } = imagesToShow
+    ? createDictionaryByType(imagesToShow)
+    : {};
+
+  const { indexToAddress: mappingData = {} } = imagesToShow
     ? createDictionaryByType(imagesToShow)
     : {};
 
@@ -47,6 +76,25 @@ const Page = ({ params }: { params: { id: string } }) => {
   const wardrobe = imagesDictionary["Wardrobe"];
   const mirror = imagesDictionary["Mirror"];
   const swingDoor = imagesDictionary["Swing Door"];
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "ArrowRight" && selectedImage < totalImages - 1) {
+        // Ensure selectedImage doesn't exceed the number of images
+        setSelectedImage((prevSelectedImage) => prevSelectedImage + 1);
+      } else if (event.key === "ArrowLeft") {
+        setSelectedImage((prevSelectedImage) =>
+          Math.max(prevSelectedImage - 1, 0)
+        );
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedImage, totalImages]);
 
   return (
     <>
@@ -63,15 +111,69 @@ const Page = ({ params }: { params: { id: string } }) => {
         >
           Close
         </button>
+
+        {/* Left Button to go to the previous image */}
+        <button
+          className="absolute left-2 md:left-10 z-[11] btn btn-neutral"
+          onClick={() => {
+            setSelectedImage((prevSelectedImage) =>
+              Math.max(prevSelectedImage - 1, 0)
+            );
+          }}
+        >
+          <MoveLeft />
+        </button>
+
+        {/* Right Button to go to the next image */}
+        <button
+          className="absolute right-2 md:right-10 z-[11] btn btn-neutral"
+          onClick={() => {
+            if (selectedImage < totalImages - 1) {
+              // Ensure selectedImage doesn't exceed the number of images
+              setSelectedImage((prevSelectedImage) => prevSelectedImage + 1);
+            }
+          }}
+        >
+          <MoveRight />
+        </button>
+
+        {/* Image display */}
         <img
-          src={selectedImage}
-          alt=""
+          src={`/api${mappingData[selectedImage]}`}
+          alt="Selected"
           className="w-full md:h-full object-contain"
         />
       </div>
       <Header />
-      <div className="flex bg-[url('/bg.jpg')] min-h-screen bg-fixed bg-no-repeat bg-cover">
-        <div className="flex lg:mt-[10px] justify-center w-full items-center flex-col">
+      <div className="flex">
+        {/* Delete */}
+        <div
+          onClick={() => document.getElementById("my_modal_2").showModal()}
+          className="fixed right-[20px] bottom-[20px] bg-[#bb2b2b] w-[60px] h-[60px] flex justify-center items-center rounded-[20px] cursor-pointer"
+        >
+          <Trash2 className="w-[40px] h-[40px]" />
+        </div>
+        <dialog id="my_modal_2" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-[30px]">Delete Warning</h3>
+            <p className="py-4">Confirm to delete!!!??</p>
+            <div className="flex justify-center items-center">
+              <button
+                className="btn hover:bg-[#bb2b2b]"
+                onClick={() => {
+                  removeSite();
+                }}
+              >
+                Delete <Trash2 />
+              </button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
+        {/* Delete */}
+        <div className="flex md:mt-[95px] justify-center w-full items-center flex-col mt-[55px]">
           <div className="flex w-full">
             <p className="text-[30px] font-bold">{site?.siteName}</p>
           </div>
@@ -83,17 +185,30 @@ const Page = ({ params }: { params: { id: string } }) => {
               {wallCladdingImages && wallCladdingImages.length && (
                 <div className="flex flex-wrap gap-2">
                   {wallCladdingImages?.map((item) => {
+                    const fileExtension = item[0].split(".").pop();
                     return (
                       <>
-                        <img
-                          src={`/api${item[0]}`}
-                          alt="..."
-                          className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center rounded-[30px] transition-transform duration-300 hover:scale-105"
-                          onClick={() => {
-                            setSelectedImage(`/api${item[0]}`);
-                            setShowImage(!showImage);
-                          }}
-                        />
+                        {fileExtension === "mp4" || fileExtension === "mkv" ? (
+                          // Render video if the extension is mp4 or mkv
+                          <video width="320" height="240" controls>
+                            <source
+                              src={`/api${item[0]}`}
+                              type={`video/${fileExtension}`}
+                            />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          // Render image if the file extension is not mp4 or mkv
+                          <img
+                            src={`/api${item[0]}`}
+                            alt="..."
+                            className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105 cursor-pointer"
+                            onClick={() => {
+                              setSelectedImage(item[2]);
+                              setShowImage(!showImage);
+                            }}
+                          />
+                        )}
                       </>
                     );
                   })}
@@ -108,17 +223,30 @@ const Page = ({ params }: { params: { id: string } }) => {
               {shower && shower.length && (
                 <div className="flex flex-wrap gap-2">
                   {shower?.map((item) => {
+                    const fileExtension = item[0].split(".").pop();
                     return (
                       <>
-                        <img
-                          src={`/api${item[0]}`}
-                          alt="..."
-                          className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105"
-                          onClick={() => {
-                            setSelectedImage(`/api${item[0]}`);
-                            setShowImage(!showImage);
-                          }}
-                        />
+                        {fileExtension === "mp4" || fileExtension === "mkv" ? (
+                          // Render video if the extension is mp4 or mkv
+                          <video width="320" height="240" controls>
+                            <source
+                              src={`/api${item[0]}`}
+                              type={`video/${fileExtension}`}
+                            />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          // Render image if the file extension is not mp4 or mkv
+                          <img
+                            src={`/api${item[0]}`}
+                            alt="..."
+                            className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105 cursor-pointer"
+                            onClick={() => {
+                              setSelectedImage(item[2]);
+                              setShowImage(!showImage);
+                            }}
+                          />
+                        )}
                       </>
                     );
                   })}
@@ -133,17 +261,30 @@ const Page = ({ params }: { params: { id: string } }) => {
               {swingDoor && swingDoor.length && (
                 <div className="flex flex-wrap gap-2">
                   {swingDoor?.map((item) => {
+                    const fileExtension = item[0].split(".").pop();
                     return (
                       <>
-                        <img
-                          src={`/api${item[0]}`}
-                          alt="..."
-                          className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105"
-                          onClick={() => {
-                            setSelectedImage(`/api${item[0]}`);
-                            setShowImage(!showImage);
-                          }}
-                        />
+                        {fileExtension === "mp4" || fileExtension === "mkv" ? (
+                          // Render video if the extension is mp4 or mkv
+                          <video width="320" height="240" controls>
+                            <source
+                              src={`/api${item[0]}`}
+                              type={`video/${fileExtension}`}
+                            />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          // Render image if the file extension is not mp4 or mkv
+                          <img
+                            src={`/api${item[0]}`}
+                            alt="..."
+                            className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105 cursor-pointer"
+                            onClick={() => {
+                              setSelectedImage(item[2]);
+                              setShowImage(!showImage);
+                            }}
+                          />
+                        )}
                       </>
                     );
                   })}
@@ -158,17 +299,30 @@ const Page = ({ params }: { params: { id: string } }) => {
               {slidingDoorImages && slidingDoorImages.length && (
                 <div className="flex flex-wrap gap-2">
                   {slidingDoorImages?.map((item) => {
+                    const fileExtension = item[0].split(".").pop();
                     return (
                       <>
-                        <img
-                          src={`/api${item[0]}`}
-                          alt="..."
-                          className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105"
-                          onClick={() => {
-                            setSelectedImage(`/api${item[0]}`);
-                            setShowImage(!showImage);
-                          }}
-                        />
+                        {fileExtension === "mp4" || fileExtension === "mkv" ? (
+                          // Render video if the extension is mp4 or mkv
+                          <video width="320" height="240" controls>
+                            <source
+                              src={`/api${item[0]}`}
+                              type={`video/${fileExtension}`}
+                            />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          // Render image if the file extension is not mp4 or mkv
+                          <img
+                            src={`/api${item[0]}`}
+                            alt="..."
+                            className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105 cursor-pointer"
+                            onClick={() => {
+                              setSelectedImage(item[2]);
+                              setShowImage(!showImage);
+                            }}
+                          />
+                        )}
                       </>
                     );
                   })}
@@ -183,17 +337,30 @@ const Page = ({ params }: { params: { id: string } }) => {
               {railing && railing.length && (
                 <div className="flex flex-wrap gap-2">
                   {railing?.map((item) => {
+                    const fileExtension = item[0].split(".").pop();
                     return (
                       <>
-                        <img
-                          src={`/api${item[0]}`}
-                          alt="..."
-                          className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105"
-                          onClick={() => {
-                            setSelectedImage(`/api${item[0]}`);
-                            setShowImage(!showImage);
-                          }}
-                        />
+                        {fileExtension === "mp4" || fileExtension === "mkv" ? (
+                          // Render video if the extension is mp4 or mkv
+                          <video width="320" height="240" controls>
+                            <source
+                              src={`/api${item[0]}`}
+                              type={`video/${fileExtension}`}
+                            />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          // Render image if the file extension is not mp4 or mkv
+                          <img
+                            src={`/api${item[0]}`}
+                            alt="..."
+                            className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105 cursor-pointer"
+                            onClick={() => {
+                              setSelectedImage(item[2]);
+                              setShowImage(!showImage);
+                            }}
+                          />
+                        )}
                       </>
                     );
                   })}
@@ -208,17 +375,30 @@ const Page = ({ params }: { params: { id: string } }) => {
               {wardrobe && wardrobe.length && (
                 <div className="flex flex-wrap gap-2">
                   {wardrobe?.map((item) => {
+                    const fileExtension = item[0].split(".").pop();
                     return (
                       <>
-                        <img
-                          src={`/api${item[0]}`}
-                          alt="..."
-                          className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105"
-                          onClick={() => {
-                            setSelectedImage(`/api${item[0]}`);
-                            setShowImage(!showImage);
-                          }}
-                        />
+                        {fileExtension === "mp4" || fileExtension === "mkv" ? (
+                          // Render video if the extension is mp4 or mkv
+                          <video width="320" height="240" controls>
+                            <source
+                              src={`/api${item[0]}`}
+                              type={`video/${fileExtension}`}
+                            />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          // Render image if the file extension is not mp4 or mkv
+                          <img
+                            src={`/api${item[0]}`}
+                            alt="..."
+                            className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105 cursor-pointer"
+                            onClick={() => {
+                              setSelectedImage(item[2]);
+                              setShowImage(!showImage);
+                            }}
+                          />
+                        )}
                       </>
                     );
                   })}
@@ -233,17 +413,30 @@ const Page = ({ params }: { params: { id: string } }) => {
               {mirror && mirror.length && (
                 <div className="flex flex-wrap gap-2">
                   {mirror?.map((item) => {
+                    const fileExtension = item[0].split(".").pop();
                     return (
                       <>
-                        <img
-                          src={`/api${item[0]}`}
-                          alt="..."
-                          className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105"
-                          onClick={() => {
-                            setSelectedImage(`/api${item[0]}`);
-                            setShowImage(!showImage);
-                          }}
-                        />
+                        {fileExtension === "mp4" || fileExtension === "mkv" ? (
+                          // Render video if the extension is mp4 or mkv
+                          <video width="320" height="240" controls>
+                            <source
+                              src={`/api${item[0]}`}
+                              type={`video/${fileExtension}`}
+                            />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          // Render image if the file extension is not mp4 or mkv
+                          <img
+                            src={`/api${item[0]}`}
+                            alt="..."
+                            className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] object-center object-cover rounded-[30px] transition-transform duration-300 hover:scale-105 cursor-pointer"
+                            onClick={() => {
+                              setSelectedImage(item[2]);
+                              setShowImage(!showImage);
+                            }}
+                          />
+                        )}
                       </>
                     );
                   })}

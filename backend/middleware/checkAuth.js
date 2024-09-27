@@ -16,7 +16,7 @@ const checkAuth = async (req, res) => {
 
     return res
       .status(200)
-      .json({ result: user.verifiedEmail, exists: true, roles: user.role });
+      .json({ result: true, exists: true, roles: user.role });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ err: "Internal Error" });

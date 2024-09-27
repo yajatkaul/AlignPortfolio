@@ -70,7 +70,7 @@ const Page = () => {
       <Header />
       <div className="flex bg-[url('/bg.jpg')] bg-cover bg-fixed bg-no-repeat overflow-auto w-screen justify-center items-center pl-[80px] pr-[80px] min-h-screen">
         <div className="mt-[120px]">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 items-center ">
             <label className="input input-bordered flex items-center gap-2">
               {/* SVG icon (omitted for brevity) */}
               <input
