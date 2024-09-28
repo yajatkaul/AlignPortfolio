@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/index"
+    "dev": "nodemon backend/index",
+    "start": "node backend/index"
   },
   "author": "",
   "license": "ISC",

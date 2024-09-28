@@ -35,6 +35,7 @@ const useSignup = () => {
       }
 
       toast.success("Account created successfully");
+      router.push("/login");
     } catch (err: any) {
       toast.error(err.message);
       console.log(err);
