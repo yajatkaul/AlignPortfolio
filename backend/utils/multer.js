@@ -1,5 +1,6 @@
 import multer from "multer";
 
+// Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -9,6 +10,7 @@ const storage = multer.diskStorage({
   },
 });
 
+// File filter for allowed mime types
 const fileFilter = (req, file, cb) => {
   const allowedMimeTypes = [
     "image/jpeg",
@@ -31,11 +33,12 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Multer configuration
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: 100 * 1024 * 1024,
   },
 });
 

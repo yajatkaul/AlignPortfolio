@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
     });
 
     const data = await res.json();
+    console.log(data);
     const { pathname } = request.nextUrl;
 
     // If the user is not authenticated, redirect to login for protected routes
@@ -23,16 +24,15 @@ export async function middleware(request: NextRequest) {
       if (protectedRoutes.some((route) => pathnameMatches(route, pathname))) {
         return NextResponse.redirect(new URL("/login", request.url));
       }
-    }
-
-    if (data.exists && data.result) {
-      if (publicRoutes.some((route) => pathnameMatches(route, pathname))) {
+      if (employeeRoutes.some((route) => pathnameMatches(route, pathname))) {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+    } else if (data.exists && data.result && !data.roles.includes("Employee")) {
+      if (employeeRoutes.some((route) => pathnameMatches(route, pathname))) {
         return NextResponse.redirect(new URL("/", request.url));
       }
-    }
-
-    if (data.exists && data.result && !data.roles.includes("Employee")) {
-      if (employeeRoutes.some((route) => pathnameMatches(route, pathname))) {
+    } else if (data.exists && data.result) {
+      if (publicRoutes.some((route) => pathnameMatches(route, pathname))) {
         return NextResponse.redirect(new URL("/", request.url));
       }
     }

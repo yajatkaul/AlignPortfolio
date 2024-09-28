@@ -46,7 +46,7 @@ export const removeSite = async (req, res) => {
   try {
     const user = await User.findById(req.session.userId);
 
-    if (user.role !== "Employee" || user.role !== "Admin") {
+    if (!user.role.includes("Admin")) {
       return res.status(400).json({ error: "Unauthorized" });
     }
     const { id } = req.params;

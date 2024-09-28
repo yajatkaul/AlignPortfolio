@@ -52,6 +52,7 @@ export const getOTP = async (req, res) => {
   try {
     const { number: number } = req.params;
     const user = await User.findOne({ number });
+    if (!user) return res.status(400).json({ error: "No user found" });
     const accountSid = process.env.accountSid;
     const authToken = process.env.authToken;
 
@@ -112,48 +113,53 @@ function isValidEmail(number) {
 
 //LOGING IN ACCOUNT
 export const login = async (req, res) => {
-  //Check if already logged in
-  if (req.session.userId) {
-    return res.status(200).json({ error: "You are already logged in." });
+  try {
+    //Check if already logged in
+    if (req.session.userId) {
+      return res.status(200).json({ error: "You are already logged in." });
+    }
+
+    //Request payload
+    const { number, password } = req.body;
+
+    if (!number || !password) {
+      return res.status(400).json({ error: "Please fill all the fields" });
+    }
+
+    //Search for the user and gets the details
+    const user = await User.findOne({ number });
+
+    //If incorrect return 400 error
+    if (password !== user.verificationToken) {
+      return res.status(400).json({ error: "Incorrect username or password" });
+    }
+
+    //If email is not verifed Delete Account
+
+    if (
+      user.verificationToken &&
+      user.verificationTokenExpiresAt &&
+      user.verificationTokenExpiresAt < Date.now()
+    ) {
+      await User.deleteOne({ _id: user._id });
+      user.save();
+      return res.status(400).json({
+        error: "You failed to verify your number account has been deleted",
+      });
+    } else if (user.verificationTokenExpiresAt) {
+      user.verificationTokenExpiresAt = undefined;
+      user.save();
+    }
+
+    //Create a session
+    req.session.userId = user._id;
+
+    //If success return 200 okk
+    res.status(200).json({ result: "Logged in", roles: user.role });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  //Request payload
-  const { number, password } = req.body;
-
-  if (!number || !password) {
-    return res.status(400).json({ error: "Please fill all the fields" });
-  }
-
-  //Search for the user and gets the details
-  const user = await User.findOne({ number });
-
-  //If incorrect return 400 error
-  if (password !== user.verificationToken) {
-    return res.status(400).json({ error: "Incorrect username or password" });
-  }
-
-  //If email is not verifed Delete Account
-
-  if (
-    user.verificationToken &&
-    user.verificationTokenExpiresAt &&
-    user.verificationTokenExpiresAt < Date.now()
-  ) {
-    await User.deleteOne({ _id: user._id });
-    user.save();
-    return res.status(400).json({
-      error: "You failed to verify your number account has been deleted",
-    });
-  } else if (user.verificationTokenExpiresAt) {
-    user.verificationTokenExpiresAt = undefined;
-    user.save();
-  }
-
-  //Create a session
-  req.session.userId = user._id;
-
-  //If success return 200 okk
-  res.status(200).json({ result: "Logged in", roles: user.role });
 };
 
 //Logout of account

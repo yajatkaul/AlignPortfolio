@@ -16,9 +16,8 @@ const userSchema = new mongoose.Schema(
     type: { type: String, required: true },
     location: { type: String, required: true },
     role: {
-      type: String,
-      default: "Member",
-      enum: ["Member", "Employee", "Admin"],
+      type: Array,
+      default: ["Member"],
     },
     verificationToken: {
       type: String,

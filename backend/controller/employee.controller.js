@@ -1,7 +1,14 @@
 import Site from "../models/site.model.js";
+import User from "../models/user.model.js";
 
 export const createSiteData = async (req, res) => {
   try {
+    const user = await User.findById(req.session.userId);
+
+    if (!user.role.includes("Employee")) {
+      return res.status(400).json({ error: "Unauthorized" });
+    }
+
     const files = req.files || [];
     const body = req.body;
 

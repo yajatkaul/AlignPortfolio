@@ -1,8 +1,10 @@
 // @ts-nocheck
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 const useUploadFiles = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const upload = async (formData) => {
@@ -20,6 +22,7 @@ const useUploadFiles = () => {
       }
 
       toast.success(data.result);
+      router.push("/");
     } catch (err) {
       toast.error(err.message);
     } finally {
