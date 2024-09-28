@@ -28,7 +28,7 @@ const Page = () => {
   return (
     <>
       <Header />
-      <div className="flex bg-[url('/bg.jpg')] min-h-screen bg-fixed bg-no-repeat bg-cover">
+      <div className="flex">
         <details className="dropdown mt-[110px] fixed left-9 md:left-12">
           <summary className="btn m-1">
             {filters && filters.length !== 1 ? (

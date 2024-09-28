@@ -183,7 +183,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               Site: {site?.siteName}
             </p>
           </div>
-          <div className="w-full h-[400px] lg:h-[700px] flex gap-4 pl-[10px] pr-[10px] flex-wrap">
+          <div className="w-full lg:h-[700px] flex gap-4 pl-[10px] pr-[10px] flex-wrap">
             <div className="flex flex-col">
               {wallCladdingImages && wallCladdingImages.length && (
                 <p className="font-bold text-[20px]">Wall Cladding</p>

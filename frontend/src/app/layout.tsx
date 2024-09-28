@@ -24,7 +24,7 @@ export default function RootLayout({
         <link rel="icon" href="/TabImg.png" />
       </head>
       <body
-        className={`${inter.className} bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover min-h-screen font-customFont`}
+        className={`${inter.className} bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover min-h-screen font-customFont bg-center`}
       >
         <AuthContextProvider>
           <FilterContextProvider>
