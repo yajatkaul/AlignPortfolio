@@ -7,9 +7,11 @@ import useGetSite from "@/hooks/useGetSite";
 import { useFilterContext } from "@/context/FilterContext";
 import { MoveLeft, MoveRight, Trash2 } from "lucide-react";
 import useRemoveSite from "@/hooks/useRemoveSite";
+import { useAuthContext } from "@/context/AuthContext";
 
 const Page = ({ params }: { params: { id: string } }) => {
   var totalImages;
+  const { authUser } = useAuthContext();
   const { removeSite } = useRemoveSite(params.id);
   const [selectedImage, setSelectedImage] = useState();
   const [showImage, setShowImage] = useState(false);
@@ -149,7 +151,9 @@ const Page = ({ params }: { params: { id: string } }) => {
         {/* Delete */}
         <div
           onClick={() => document.getElementById("my_modal_2").showModal()}
-          className="fixed right-[20px] bottom-[20px] bg-[#bb2b2b] w-[60px] h-[60px] flex justify-center items-center rounded-[20px] cursor-pointer"
+          className={`${
+            authUser === "Employee" ? "fixed" : "hidden"
+          } right-[20px] bottom-[20px] bg-[#bb2b2b] w-[60px] h-[60px] flex justify-center items-center rounded-[20px] cursor-pointer`}
         >
           <Trash2 className="w-[40px] h-[40px]" />
         </div>
@@ -173,9 +177,11 @@ const Page = ({ params }: { params: { id: string } }) => {
           </form>
         </dialog>
         {/* Delete */}
-        <div className="flex md:mt-[95px] justify-center w-full items-center flex-col mt-[55px]">
+        <div className="flex md:mt-[95px] justify-center w-full items-center flex-col mt-[105px]">
           <div className="flex w-full">
-            <p className="text-[30px] font-bold">{site?.siteName}</p>
+            <p className="text-[30px] md:text-[50px] font-bold pl-[10px]">
+              Site: {site?.siteName}
+            </p>
           </div>
           <div className="w-full h-[400px] lg:h-[700px] flex gap-4 pl-[10px] pr-[10px] flex-wrap">
             <div className="flex flex-col">

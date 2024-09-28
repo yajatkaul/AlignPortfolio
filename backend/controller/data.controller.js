@@ -1,4 +1,5 @@
 import Site from "../models/site.model.js";
+import User from "../models/user.model.js";
 
 export const getSites = async (req, res) => {
   try {
@@ -43,6 +44,11 @@ export const getSite = async (req, res) => {
 
 export const removeSite = async (req, res) => {
   try {
+    const user = await User.findById(req.session.userId);
+
+    if (user.role !== "Employee" || user.role !== "Admin") {
+      return res.status(400).json({ error: "Unauthorized" });
+    }
     const { id } = req.params;
 
     await Site.findByIdAndDelete(id);

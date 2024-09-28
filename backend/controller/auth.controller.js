@@ -40,7 +40,7 @@ export const signup = async (req, res) => {
     //req.session.userId = newUser._id;
 
     //Account has been created response
-    res.status(200).json({ result: `Success` });
+    res.status(200).json({ result: `Success`, roles: newUser.role });
   } catch (err) {
     //Incase there is an error
     console.log(err);
@@ -153,7 +153,7 @@ export const login = async (req, res) => {
   req.session.userId = user._id;
 
   //If success return 200 okk
-  res.status(200).json({ result: "Logged in" });
+  res.status(200).json({ result: "Logged in", roles: user.role });
 };
 
 //Logout of account
