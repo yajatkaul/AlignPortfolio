@@ -18,6 +18,7 @@ const fileFilter = (req, file, cb) => {
     "image/gif",
     "image/webp",
     "image/jpg",
+    "image/heic",
     "video/mp4",
     "video/mkv",
   ];
@@ -26,7 +27,7 @@ const fileFilter = (req, file, cb) => {
   } else {
     cb(
       new Error(
-        "Invalid file type. Only JPEG, PNG, GIF, MP4, MKV and WEBP files are allowed."
+        "Invalid file type. Only JPEG, HEIC, PNG, GIF, MP4, MKV and WEBP files are allowed."
       ),
       false
     );
