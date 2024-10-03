@@ -45,7 +45,6 @@ const Page = () => {
             <div className="flex flex-wrap">
               {toggleButtons.items.map((item) => {
                 const isSelected = filters?.includes(item);
-
                 return (
                   <button
                     key={item}

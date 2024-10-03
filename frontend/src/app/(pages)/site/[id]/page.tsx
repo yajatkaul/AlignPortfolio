@@ -184,11 +184,9 @@ const Page = ({ params }: { params: { id: string } }) => {
             </p>
           </div>
           <div className="w-full lg:h-[700px] flex gap-4 pl-[10px] pr-[10px] flex-wrap">
-            <div className="flex flex-col">
-              {wallCladdingImages && wallCladdingImages.length && (
+            {wallCladdingImages && wallCladdingImages.length && (
+              <div className="flex flex-col">
                 <p className="font-bold text-[20px]">Wall Cladding</p>
-              )}
-              {wallCladdingImages && wallCladdingImages.length && (
                 <div className="flex flex-wrap gap-2">
                   {wallCladdingImages?.map((item) => {
                     const fileExtension = item[0].split(".").pop();
@@ -219,14 +217,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex flex-col">
-              {shower && shower.length && (
+            {shower && shower.length && (
+              <div className="flex flex-col">
                 <p className="font-bold text-[20px]"> Shower</p>
-              )}
-              {shower && shower.length && (
                 <div className="flex flex-wrap gap-2">
                   {shower?.map((item) => {
                     const fileExtension = item[0].split(".").pop();
@@ -257,14 +253,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex flex-col">
-              {swingDoor && swingDoor.length && (
+            {swingDoor && swingDoor.length && (
+              <div className="flex flex-col">
                 <p className="font-bold text-[20px]">Swing Door</p>
-              )}
-              {swingDoor && swingDoor.length && (
                 <div className="flex flex-wrap gap-2">
                   {swingDoor?.map((item) => {
                     const fileExtension = item[0].split(".").pop();
@@ -295,14 +289,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex flex-col">
-              {slidingDoorImages && slidingDoorImages.length && (
+            {slidingDoorImages && slidingDoorImages.length && (
+              <div className="flex flex-col">
                 <p className="font-bold text-[20px]">Sliding Door</p>
-              )}
-              {slidingDoorImages && slidingDoorImages.length && (
                 <div className="flex flex-wrap gap-2">
                   {slidingDoorImages?.map((item) => {
                     const fileExtension = item[0].split(".").pop();
@@ -333,14 +325,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex flex-col">
-              {railing && railing.length && (
+            {railing && railing.length && (
+              <div className="flex flex-col">
                 <p className="font-bold text-[20px]">Railing</p>
-              )}
-              {railing && railing.length && (
                 <div className="flex flex-wrap gap-2">
                   {railing?.map((item) => {
                     const fileExtension = item[0].split(".").pop();
@@ -371,14 +361,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex flex-col">
-              {wardrobe && wardrobe.length && (
+            {wardrobe && wardrobe.length && (
+              <div className="flex flex-col">
                 <p className="font-bold text-[20px]">Wardrobe</p>
-              )}
-              {wardrobe && wardrobe.length && (
                 <div className="flex flex-wrap gap-2">
                   {wardrobe?.map((item) => {
                     const fileExtension = item[0].split(".").pop();
@@ -409,14 +397,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex flex-col">
-              {mirror && mirror.length && (
+            {mirror && mirror.length && (
+              <div className="flex flex-col">
                 <p className="font-bold text-[20px]">Mirror</p>
-              )}
-              {mirror && mirror.length && (
                 <div className="flex flex-wrap gap-2">
                   {mirror?.map((item) => {
                     const fileExtension = item[0].split(".").pop();
@@ -447,8 +433,8 @@ const Page = ({ params }: { params: { id: string } }) => {
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
