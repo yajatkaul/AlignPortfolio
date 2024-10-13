@@ -88,6 +88,7 @@ const Page = () => {
                 onChange={(e) => setSelectedFiles(Array.from(e.target.files))}
                 multiple
               />
+
               <select
                 className="select select-bordered w-full max-w-xs"
                 value={selectedCategory}

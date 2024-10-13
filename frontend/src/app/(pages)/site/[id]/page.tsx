@@ -152,7 +152,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         <div
           onClick={() => document.getElementById("my_modal_2").showModal()}
           className={`${
-            authUser.includes("Admin") ? "fixed" : "hidden"
+            authUser?.includes("Admin") ? "fixed" : "hidden"
           } right-[20px] bottom-[20px] bg-[#bb2b2b] w-[60px] h-[60px] flex justify-center items-center rounded-[20px] cursor-pointer`}
         >
           <Trash2 className="w-[40px] h-[40px]" />
