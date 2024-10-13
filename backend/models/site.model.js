@@ -1,12 +1,22 @@
 import mongoose from "mongoose";
 
+//Schema
 const siteSchema = new mongoose.Schema(
   {
+    category: {
+      type: String,
+      required: true,
+    },
     siteName: {
       type: String,
       required: true,
     },
-    items: [],
+    files: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );

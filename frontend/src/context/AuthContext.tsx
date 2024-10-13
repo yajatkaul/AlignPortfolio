@@ -20,7 +20,7 @@ export const AuthContextProvider = ({
   useEffect(() => {
     const storedAuth = localStorage.getItem("Auth");
     if (storedAuth) {
-      setAuthUser(JSON.parse(storedAuth).roles);
+      setAuthUser(JSON.parse(storedAuth).details);
     }
   }, []);
 

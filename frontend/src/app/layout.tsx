@@ -4,7 +4,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "react-hot-toast";
 import { AuthContextProvider } from "@/context/AuthContext";
-import { FilterContextProvider } from "@/context/FilterContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,12 +26,10 @@ export default function RootLayout({
         className={`${inter.className} bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover min-h-screen font-customFont bg-center`}
       >
         <AuthContextProvider>
-          <FilterContextProvider>
-            <ThemeProvider attribute="class" defaultTheme="light">
-              {children}
-              <Toaster />
-            </ThemeProvider>
-          </FilterContextProvider>
+          <ThemeProvider attribute="class" defaultTheme="light">
+            {children}
+            <Toaster />
+          </ThemeProvider>
         </AuthContextProvider>
       </body>
     </html>

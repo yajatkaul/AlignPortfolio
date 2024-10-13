@@ -8,6 +8,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    flowbite.content(),
   ],
   prefix: "",
   theme: {
@@ -19,9 +20,6 @@ const config = {
       },
     },
     extend: {
-      fontFamily: {
-        customFont: ["CustomFont"],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

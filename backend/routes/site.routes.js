@@ -1,12 +1,11 @@
 import express from "express";
-import upload from "../utils/multer.js"; // Your multer configuration
-import checkPerms from "../middleware/checkPerms.js";
-import { createSiteData } from "../controller/employee.controller.js";
+import { addSite, getSites } from "../controller/site.controller.js";
+import upload from "../utils/multer.js";
 import multer from "multer";
 
 const router = express.Router();
 
-router.post("/createSiteData", checkPerms, (req, res, next) => {
+router.post("/addSite", (req, res, next) => {
   upload.any()(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       // Handle Multer-specific errors
@@ -21,8 +20,10 @@ router.post("/createSiteData", checkPerms, (req, res, next) => {
       return res.status(500).json({ error: "An unknown error occurred." });
     }
     // Proceed to your controller if no errors
-    createSiteData(req, res, next);
+    addSite(req, res, next);
   });
 });
+
+router.get("/getSites/:category", getSites);
 
 export default router;
