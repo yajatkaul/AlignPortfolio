@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const useRemoveSites = () => {
-  const router = useRouter();
   const [loading2, setLoading] = useState(false);
 
   const removeSite = async (id) => {
