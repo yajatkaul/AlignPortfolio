@@ -1,10 +1,11 @@
 // @ts-nocheck
 "use client";
 import Header from "@/components/local/Header";
+import { useAuthContext } from "@/context/AuthContext";
 import useGetSites from "@/hooks/useGetSites";
 import useRemoveSites from "@/hooks/useRemoveSite";
 import { Trash2 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Page = ({ params }: { params: { name: string } }) => {
   const { loading2, removeSite } = useRemoveSites();
@@ -12,6 +13,7 @@ const Page = ({ params }: { params: { name: string } }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentImages, setCurrentImages] = useState([]);
+  const { authUser } = useAuthContext();
 
   const openModal = (images, index) => {
     setCurrentImages(images);
@@ -58,7 +60,9 @@ const Page = ({ params }: { params: { name: string } }) => {
               </div>
               <div className="flex w-full justify-end">
                 <Trash2
-                  className="text-red-600 size-[50px] cursor-pointer"
+                  className={`text-red-600 size-[50px] cursor-pointer ${
+                    authUser?.includes("Employee") ? "inline" : "hidden"
+                  }`}
                   onClick={() =>
                     document.getElementById(`my_modal_${site._id}`).showModal()
                   }
@@ -79,7 +83,7 @@ const Page = ({ params }: { params: { name: string } }) => {
                         <p className="font-bold">{site.siteName}</p>
                       </div>
                       <button
-                        className="btn hover:bg-red-700 hover:text-white text-[20px]"
+                        className={`btn hover:bg-red-700 hover:text-white text-[20px]`}
                         onClick={() => {
                           removeSite(site._id);
                         }}
