@@ -47,7 +47,7 @@ const Page = ({ params }: { params: { name: string } }) => {
                       key={imageIndex}
                       src={`/api/${image}`}
                       alt=""
-                      className="w-[300px] object-contain cursor-pointer transition-transform duration-300 hover:scale-105"
+                      className="w-[300px] object-contain cursor-pointer transition-transform duration-300 hover:scale-105 rounded-2xl"
                       onClick={() => openModal(site.files, imageIndex)}
                     />
                   );

@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "react-hot-toast";
 import { AuthContextProvider } from "@/context/AuthContext";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Align",
@@ -23,7 +20,7 @@ export default function RootLayout({
         <link rel="icon" href="/TabImg.png" />
       </head>
       <body
-        className={`${inter.className} bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover min-h-screen font-customFont bg-center`}
+        className={`bg-[url('/bg.jpg')] bg-fixed bg-no-repeat bg-cover min-h-screen font-customFont bg-center`}
       >
         <AuthContextProvider>
           <ThemeProvider attribute="class" defaultTheme="light">

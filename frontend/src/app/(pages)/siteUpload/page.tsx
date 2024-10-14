@@ -7,6 +7,7 @@ const Page = () => {
   const {
     siteName,
     category,
+    loading,
     handleSiteNameChange,
     handleCategoryChange,
     handleFilesChange,
@@ -49,8 +50,16 @@ const Page = () => {
           multiple
           onChange={handleFilesChange}
         />
-        <button className="btn" onClick={handleUpload}>
-          Upload Site
+        <button
+          className="btn flex justify-center items-center"
+          onClick={handleUpload}
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="loading loading-dots loading-md"></span>
+          ) : (
+            "Upload Site"
+          )}
         </button>
       </div>
     </>

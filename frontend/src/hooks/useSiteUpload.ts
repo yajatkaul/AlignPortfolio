@@ -6,6 +6,7 @@ const useSiteUpload = () => {
   const [siteName, setSiteName] = useState("");
   const [category, setCategory] = useState("");
   const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSiteNameChange = (e) => {
     setSiteName(e.target.value);
@@ -33,6 +34,7 @@ const useSiteUpload = () => {
     });
 
     try {
+      setLoading(true);
       const response = await fetch("/api/site/addSite", {
         method: "POST",
         body: formData,
@@ -46,6 +48,8 @@ const useSiteUpload = () => {
       toast.success(data.result);
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,6 +61,7 @@ const useSiteUpload = () => {
     handleCategoryChange,
     handleFilesChange,
     handleUpload,
+    loading,
   };
 };
 
