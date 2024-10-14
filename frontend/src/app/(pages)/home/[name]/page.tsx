@@ -2,9 +2,12 @@
 "use client";
 import Header from "@/components/local/Header";
 import useGetSites from "@/hooks/useGetSites";
+import useRemoveSites from "@/hooks/useRemoveSite";
+import { Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
 const Page = ({ params }: { params: { name: string } }) => {
+  const { loading2, removeSite } = useRemoveSites();
   const { sites, loading } = useGetSites(params.name);
   const [isOpen, setIsOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -53,6 +56,41 @@ const Page = ({ params }: { params: { name: string } }) => {
                   );
                 })}
               </div>
+              <div className="flex w-full justify-end">
+                <Trash2
+                  className="text-red-600 size-[50px] cursor-pointer"
+                  onClick={() =>
+                    document.getElementById(`my_modal_${site._id}`).showModal()
+                  }
+                />
+                <dialog id={`my_modal_${site._id}`} className="modal">
+                  <div className="modal-box">
+                    <form method="dialog">
+                      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                        ✕
+                      </button>
+                    </form>
+                    <h3 className="font-bold text-lg">Delete Warning!</h3>
+                    <div className="flex flex-col justify-center">
+                      <div className="flex justify-center items-center gap-2 text-[25px] flex-wrap text-wrap">
+                        <p className="py-4">
+                          Attention you are about to delete
+                        </p>
+                        <p className="font-bold">{site.siteName}</p>
+                      </div>
+                      <button
+                        className="btn hover:bg-red-700 hover:text-white text-[20px]"
+                        onClick={() => {
+                          removeSite(site._id);
+                        }}
+                        disabled={loading2}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </dialog>
+              </div>
             </div>
           );
         })}
@@ -61,7 +99,7 @@ const Page = ({ params }: { params: { name: string } }) => {
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
           <button
-            className="absolute top-4 right-4 text-white text-2xl"
+            className="absolute top-4 right-4 text-white text-[40px]"
             onClick={closeModal}
           >
             &times;

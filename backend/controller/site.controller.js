@@ -40,6 +40,27 @@ export const addSite = async (req, res) => {
   }
 };
 
+export const removeSite = async (req, res) => {
+  try {
+    const id = req.session.userId;
+
+    const user = await User.findById(id);
+    if (!user.role.includes("Employee"))
+      return res.status(400).json({ error: "Unauthorized" });
+
+    const site_id = req.params.id;
+
+    await Site.findByIdAndDelete(site_id);
+
+    res.status(200).json({
+      result: "Site removed successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting site:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+};
+
 export const getSites = async (req, res) => {
   try {
     const category = req.params.category;

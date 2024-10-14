@@ -1,5 +1,9 @@
 import express from "express";
-import { addSite, getSites } from "../controller/site.controller.js";
+import {
+  addSite,
+  getSites,
+  removeSite,
+} from "../controller/site.controller.js";
 import upload from "../utils/multer.js";
 import multer from "multer";
 
@@ -23,6 +27,8 @@ router.post("/addSite", (req, res, next) => {
     addSite(req, res, next);
   });
 });
+
+router.get("/removeSite/:id", removeSite);
 
 router.get("/getSites/:category", getSites);
 
