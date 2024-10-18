@@ -33,7 +33,7 @@ const useLogin = () => {
       setAuthUser(data.details);
 
       toast.success("Logged in");
-      router.push("/");
+      router.push("/home");
     } catch (err: any) {
       toast.error(err.message);
       console.log(err);

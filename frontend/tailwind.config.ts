@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-const flowbite = require("flowbite-react/tailwind");
 
 const config = {
   darkMode: ["class"],
@@ -8,7 +7,6 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
-    flowbite.content(),
   ],
   prefix: "",
   theme: {
@@ -20,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        customFont: ["CustomFont"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -76,11 +77,7 @@ const config = {
       },
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    //flowbite.plugin(),
-    require("daisyui"),
-  ],
+  plugins: [require("tailwindcss-animate"), require("daisyui")],
 
   daisyui: {
     themes: ["light"], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
