@@ -46,16 +46,29 @@ const Page = ({ params }: { params: { name: string } }) => {
             <div key={index} className="flex flex-col">
               <p className="text-[35px]">{site.siteName}</p>
               <div className="flex gap-8 flex-wrap">
-                {site?.files.map((image, imageIndex) => {
-                  return (
+                {site.files.map((file, fileIndex) => {
+                  const isImage = file.match(
+                    /\.(jpeg|jpg|png|gif|webp|heic)$/i
+                  ); // Check if the file is an image
+                  const isVideo = file.match(/\.(mp4|mkv|mov)$/i); // Check if the file is a video
+
+                  return isImage ? (
                     <img
-                      key={imageIndex}
-                      src={`/api/${image}`}
+                      key={fileIndex}
+                      src={`/api/${file}`}
                       alt=""
                       className="w-[300px] object-contain cursor-pointer transition-transform duration-300 hover:scale-105 rounded-2xl"
-                      onClick={() => openModal(site.files, imageIndex)}
+                      onClick={() => openModal(site.files, fileIndex)}
                     />
-                  );
+                  ) : isVideo ? (
+                    <video
+                      key={fileIndex}
+                      src={`/api/${file}`}
+                      controls
+                      className="w-[300px] object-contain cursor-pointer transition-transform duration-300 hover:scale-105 rounded-2xl"
+                      onClick={() => openModal(site.files, fileIndex)}
+                    />
+                  ) : null;
                 })}
               </div>
               <div className="flex w-full justify-end">
@@ -114,11 +127,23 @@ const Page = ({ params }: { params: { name: string } }) => {
           >
             &#10094; {/* Left arrow */}
           </button>
-          <img
-            src={`/api/${currentImages[currentImageIndex]}`}
-            alt=""
-            className="w-[800px] object-contain"
-          />
+
+          {currentImages[currentImageIndex].match(
+            /\.(jpeg|jpg|png|gif|webp|heic)$/i
+          ) ? (
+            <img
+              src={`/api/${currentImages[currentImageIndex]}`}
+              alt=""
+              className="w-[800px] object-contain"
+            />
+          ) : currentImages[currentImageIndex].match(/\.(mp4|mkv|mov)$/i) ? (
+            <video
+              src={`/api/${currentImages[currentImageIndex]}`}
+              controls
+              className="w-[800px] object-contain max-h-[700px]"
+            />
+          ) : null}
+
           <button
             className="absolute right-4 text-white text-2xl"
             onClick={showNextImage}
