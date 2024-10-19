@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
     // If the user is authenticated, prevent access to public routes like /login or /signup
     if (data.exists && data.result) {
       if (publicRoutes.some((route) => pathnameMatches(route, pathname))) {
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect(new URL("/home", request.url));
       }
     }
   } catch (err) {

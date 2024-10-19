@@ -20,7 +20,7 @@ router.post("/addSite", (req, res, next) => {
       }
       return res.status(400).json({ error: err.message });
     } else if (err) {
-      // Handle unknown errors
+      console.log(err);
       return res.status(500).json({ error: "An unknown error occurred." });
     }
     // Proceed to your controller if no errors

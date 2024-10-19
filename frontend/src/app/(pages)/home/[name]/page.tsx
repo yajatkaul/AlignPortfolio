@@ -46,7 +46,7 @@ const Page = ({ params }: { params: { name: string } }) => {
             <div key={index} className="flex flex-col">
               <p className="text-[35px]">{site.siteName}</p>
               <div className="flex gap-8 flex-wrap">
-                {site.files.map((image, imageIndex) => {
+                {site?.files.map((image, imageIndex) => {
                   return (
                     <img
                       key={imageIndex}

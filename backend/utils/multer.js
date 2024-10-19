@@ -21,13 +21,14 @@ const fileFilter = (req, file, cb) => {
     "image/heic",
     "video/mp4",
     "video/mkv",
+    "video/quicktime",
   ];
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(
       new Error(
-        "Invalid file type. Only JPEG, HEIC, PNG, GIF, MP4, MKV and WEBP files are allowed."
+        "Invalid file type. Only JPEG, HEIC, PNG, GIF, MP4, MKV, MOV and WEBP files are allowed."
       ),
       false
     );
@@ -39,7 +40,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 300 * 1024 * 1024,
+    fileSize: 400 * 1024 * 1024,
   },
 });
 
