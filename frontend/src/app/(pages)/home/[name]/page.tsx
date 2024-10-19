@@ -5,17 +5,15 @@ import { useAuthContext } from "@/context/AuthContext";
 import useGetSites from "@/hooks/useGetSites";
 import useRemoveSites from "@/hooks/useRemoveSite";
 import { Trash2 } from "lucide-react";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 
 const Page = ({ params }: { params: { name: string } }) => {
   const { loading2, removeSite } = useRemoveSites();
-  const [page, setPage] = useState(0); // Track the current page number
-  const { sites, loading, hasMore } = useGetSites(params.name, page);
-  const observerRef = useRef(); // Ref for the observer
-  const { authUser } = useAuthContext();
+  const { sites, loading, total, setPage } = useGetSites(params.name);
   const [isOpen, setIsOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentImages, setCurrentImages] = useState([]);
+  const { authUser } = useAuthContext();
 
   const openModal = (images, index) => {
     setCurrentImages(images);
@@ -39,23 +37,22 @@ const Page = ({ params }: { params: { name: string } }) => {
     );
   };
 
-  // Scroll observer logic
+  // Handle scrolling to load more sites
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
-          setPage((prevPage) => prevPage + 1); // Load more sites when the last site is visible
-        }
-      },
-      { threshold: 1 }
-    );
-
-    if (observerRef.current) observer.observe(observerRef.current);
-
-    return () => {
-      if (observerRef.current) observer.unobserve(observerRef.current);
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight &&
+        !loading &&
+        sites.length < total
+      ) {
+        setPage((prevPage) => prevPage + 1);
+      }
     };
-  }, [hasMore, loading]);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, sites.length, total]);
 
   return (
     <>
@@ -69,8 +66,8 @@ const Page = ({ params }: { params: { name: string } }) => {
                 {site.files.map((file, fileIndex) => {
                   const isImage = file.match(
                     /\.(jpeg|jpg|png|gif|webp|heic)$/i
-                  ); // Check if the file is an image
-                  const isVideo = file.match(/\.(mp4|mkv|mov)$/i); // Check if the file is a video
+                  );
+                  const isVideo = file.match(/\.(mp4|mkv|mov)$/i);
 
                   return isImage ? (
                     <img
@@ -116,7 +113,7 @@ const Page = ({ params }: { params: { name: string } }) => {
                         <p className="font-bold">{site.siteName}</p>
                       </div>
                       <button
-                        className={`btn hover:bg-red-700 hover:text-white text-[20px]`}
+                        className="btn hover:bg-red-700 hover:text-white text-[20px]"
                         onClick={() => {
                           removeSite(site._id);
                         }}
@@ -131,10 +128,8 @@ const Page = ({ params }: { params: { name: string } }) => {
             </div>
           );
         })}
+        {loading && <p>Loading more sites...</p>}
       </div>
-
-      {/* The div below will act as the "infinite scroll" trigger */}
-      <div ref={observerRef} style={{ height: "20px" }}></div>
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">

@@ -2,42 +2,39 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const useGetSites = (name, page) => {
+const useGetSites = (name) => {
   const [sites, setSites] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true); // Track if more sites are available
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const decodedString = decodeURIComponent(name);
 
-  useEffect(() => {
-    const getSites = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(
-          `/api/site/getSites/${decodedString}?limit=3&skip=${page * 3}`
-        );
+  const fetchSites = async (pageNumber) => {
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `/api/site/getSites/${decodedString}?page=${pageNumber}&limit=3`
+      );
+      const data = await res.json();
 
-        const data = await res.json();
-
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        if (data.length < 3) {
-          setHasMore(false); // No more sites to load if returned data is less than the limit
-        }
-
-        setSites((prevSites) => [...prevSites, ...data]); // Append new data
-      } catch (err: any) {
-        toast.error(err.message);
-      } finally {
-        setLoading(false);
+      if (data.error) {
+        throw new Error(data.error);
       }
-    };
 
-    getSites();
-  }, [page, name]);
+      setSites((prev) => [...prev, ...data.sites]); // Append new sites to the existing ones
+      setTotal(data.total); // Update total count
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  return { sites, loading, hasMore };
+  useEffect(() => {
+    fetchSites(page);
+  }, [page]);
+
+  return { sites, loading, total, setPage };
 };
 
 export default useGetSites;

@@ -64,18 +64,16 @@ export const removeSite = async (req, res) => {
 export const getSites = async (req, res) => {
   try {
     const category = req.params.category;
-    const limit = parseInt(req.query.limit) || 3;
-    const skip = parseInt(req.query.skip) || 0;
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 items per request
 
     const sites = await Site.find({ category: category })
-      .skip(skip)
-      .limit(limit);
+      .skip((page - 1) * limit) // Calculate the offset
+      .limit(limit); // Limit the number of results
 
-    if (!sites || sites.length === 0) {
-      return res.status(400).json({ error: "No more sites found" });
-    }
+    const totalSites = await Site.countDocuments({ category: category });
 
-    res.status(200).json(sites);
+    res.status(200).json({ sites, total: totalSites });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error. Please try again later." });
