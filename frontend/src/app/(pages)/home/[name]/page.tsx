@@ -5,15 +5,17 @@ import { useAuthContext } from "@/context/AuthContext";
 import useGetSites from "@/hooks/useGetSites";
 import useRemoveSites from "@/hooks/useRemoveSite";
 import { Trash2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const Page = ({ params }: { params: { name: string } }) => {
   const { loading2, removeSite } = useRemoveSites();
-  const { sites, loading } = useGetSites(params.name);
+  const [page, setPage] = useState(0); // Track the current page number
+  const { sites, loading, hasMore } = useGetSites(params.name, page);
+  const observerRef = useRef(); // Ref for the observer
+  const { authUser } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentImages, setCurrentImages] = useState([]);
-  const { authUser } = useAuthContext();
 
   const openModal = (images, index) => {
     setCurrentImages(images);
@@ -36,6 +38,24 @@ const Page = ({ params }: { params: { name: string } }) => {
       prevIndex === 0 ? currentImages.length - 1 : prevIndex - 1
     );
   };
+
+  // Scroll observer logic
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          setPage((prevPage) => prevPage + 1); // Load more sites when the last site is visible
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (observerRef.current) observer.observe(observerRef.current);
+
+    return () => {
+      if (observerRef.current) observer.unobserve(observerRef.current);
+    };
+  }, [hasMore, loading]);
 
   return (
     <>
@@ -112,6 +132,9 @@ const Page = ({ params }: { params: { name: string } }) => {
           );
         })}
       </div>
+
+      {/* The div below will act as the "infinite scroll" trigger */}
+      <div ref={observerRef} style={{ height: "20px" }}></div>
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">

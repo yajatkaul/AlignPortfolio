@@ -64,10 +64,16 @@ export const removeSite = async (req, res) => {
 export const getSites = async (req, res) => {
   try {
     const category = req.params.category;
+    const limit = parseInt(req.query.limit) || 3;
+    const skip = parseInt(req.query.skip) || 0;
 
-    const sites = await Site.find({ category: category });
+    const sites = await Site.find({ category: category })
+      .skip(skip)
+      .limit(limit);
 
-    if (!sites) return res.status(400).json({ error: "Invalid Category" });
+    if (!sites || sites.length === 0) {
+      return res.status(400).json({ error: "No more sites found" });
+    }
 
     res.status(200).json(sites);
   } catch (err) {
