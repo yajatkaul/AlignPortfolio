@@ -12,6 +12,7 @@ const Page = () => {
   const [inputs, setInputs] = useState({
     number: "",
     password: "",
+    displayName: "",
   });
   const handleLogin = (e: any) => {
     e.preventDefault();
@@ -19,12 +20,12 @@ const Page = () => {
   };
 
   //@ts-expect-error
-  const OTPGen = (number) => {
-    if (!inputs.number) {
-      return toast.error("Enter a valid phone number");
+  const OTPGen = (number, displayName) => {
+    if (!inputs.number || !inputs.displayName) {
+      return toast.error("Enter a valid phone number/name");
     }
 
-    getOTP(number);
+    getOTP(number, displayName);
   };
 
   return (
@@ -71,6 +72,25 @@ const Page = () => {
                 }}
               />
             </label>
+            <label className="input input-bordered flex items-center gap-2 w-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+              </svg>
+              <input
+                type="text"
+                className="grow"
+                placeholder="Name"
+                defaultValue={inputs.displayName}
+                onChange={(e) => {
+                  setInputs({ ...inputs, displayName: e.target.value });
+                }}
+              />
+            </label>
             <label className="input input-bordered flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,29 +116,19 @@ const Page = () => {
               <p
                 className="cursor-pointer"
                 onClick={() => {
-                  OTPGen(inputs.number);
+                  OTPGen(inputs.number, inputs.displayName);
                 }}
               >
                 Get OTP
               </p>
             </label>
             <div className="divider"></div>
-            <div className="flex justify-start items-start w-full">
-              <p
-                className="flex cursor-pointer"
-                onClick={() => {
-                  router.push("/signup");
-                }}
-              >
-                {"Don't have an account?"}
-              </p>
-            </div>
 
             <button className="btn w-full">
               {loading ? (
                 <span className="loading loading-ring loading-lg"></span>
               ) : (
-                "Login"
+                "Enter the Website"
               )}
             </button>
           </div>

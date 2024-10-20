@@ -11,10 +11,7 @@ const userSchema = new mongoose.Schema(
     number: {
       type: String,
       required: true,
-      unique: true,
     },
-    type: { type: String, required: true },
-    location: { type: String, required: true },
     role: {
       type: Array,
       default: ["Member"],

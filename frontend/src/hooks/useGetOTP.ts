@@ -4,10 +4,12 @@ import toast from "react-hot-toast";
 const useOTP = () => {
   const [loading, setLoading] = useState(false);
   const [otp, setOTP] = useState();
-  const getOTP = async (number: number) => {
+  const getOTP = async (number: number, displayName: string) => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/auth/getotp/${number}`);
+      const res = await fetch(
+        `/api/auth/getotp/${number}?displayName=${displayName}`
+      );
 
       const data = await res.json();
 

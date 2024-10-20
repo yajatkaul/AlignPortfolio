@@ -6,6 +6,7 @@ import { useAuthContext } from "@/context/AuthContext";
 interface LoginProps {
   number: string;
   password: string;
+  displayName: string;
 }
 
 const useLogin = () => {
@@ -13,13 +14,13 @@ const useLogin = () => {
   const [loading, setLoading] = useState(false);
   // @ts-ignore
   const { setAuthUser } = useAuthContext();
-  const login = async ({ number, password }: LoginProps) => {
+  const login = async ({ number, password, displayName }: LoginProps) => {
     try {
       setLoading(true);
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ number, password }),
+        body: JSON.stringify({ number, password, displayName }),
       });
 
       const data = await res.json();

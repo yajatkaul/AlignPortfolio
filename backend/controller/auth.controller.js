@@ -1,58 +1,28 @@
 import User from "../models/user.model.js";
 import twilio from "twilio";
 
-//CREATING AN ACCOUNT FROM HERE
-export const signup = async (req, res) => {
-  try {
-    const { displayName, number, password, type, location } = req.body;
-
-    //Function to check if all the details are inputted correctly
-    const result = await signupChecks({
-      displayName,
-      number,
-      type,
-      location,
-    });
-
-    //If details are not correct then sends a error response
-    if (result !== true) {
-      return res.status(400).json({ error: result.error });
-    }
-
-    //Generate random token
-    const verificationToken = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
-
-    //If it is able to pass every check create a new user
-    const newUser = new User({
-      displayName,
-      number,
-      type,
-      location,
-      verificationToken,
-      verificationTokenExpiresAt: Date.now() + 3 * 24 * 60 * 60 * 1000,
-    });
-
-    //Saving it to the database
-    await newUser.save();
-
-    //req.session.userId = newUser._id;
-
-    //Account has been created response
-    res.status(200).json({ result: `Success`, roles: newUser.role });
-  } catch (err) {
-    //Incase there is an error
-    console.log(err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
-
 export const getOTP = async (req, res) => {
   try {
     const { number: number } = req.params;
-    const user = await User.findOne({ number });
-    if (!user) return res.status(400).json({ error: "No user found" });
+    const { displayName } = req.query;
+    let user = await User.findOne({ number, displayName });
+
+    if (!user) {
+      const verificationToken = Math.floor(
+        100000 + Math.random() * 900000
+      ).toString();
+
+      user = new User({
+        displayName,
+        number,
+        verificationToken,
+        verificationTokenExpiresAt: Date.now() + 3 * 24 * 60 * 60 * 1000,
+      });
+
+      //Saving it to the database
+      await user.save();
+    }
+
     const accountSid = process.env.accountSid;
     const authToken = process.env.authToken;
 
@@ -80,37 +50,6 @@ export const getOTP = async (req, res) => {
   }
 };
 
-//Function to check the details if they are correct or not
-async function signupChecks({ displayName, number, type, location }) {
-  const emailCheck = await User.findOne({ number });
-
-  if (emailCheck) {
-    return { error: "Email is already in use" };
-  }
-
-  if (!displayName || !number || !type || !location) {
-    return { error: "Please fill all fields" };
-  }
-
-  if (displayName.length < 5) {
-    return { error: "Names should be greater than 4 letters" };
-  }
-
-  if (!isValidEmail(number)) {
-    return { error: "Invalid number format" };
-  }
-
-  return true;
-}
-
-//Check if its a valid email
-function isValidEmail(number) {
-  if (Number(number)) {
-    return true;
-  }
-  return false;
-}
-
 //LOGING IN ACCOUNT
 export const login = async (req, res) => {
   try {
@@ -120,14 +59,26 @@ export const login = async (req, res) => {
     }
 
     //Request payload
-    const { number, password } = req.body;
+    const { number, password, displayName } = req.body;
 
     if (!number || !password) {
       return res.status(400).json({ error: "Please fill all the fields" });
     }
 
     //Search for the user and gets the details
-    const user = await User.findOne({ number });
+    let user = await User.findOne({ number, displayName });
+
+    if (!user) {
+      user = new User({
+        displayName,
+        number,
+        verificationToken,
+        verificationTokenExpiresAt: Date.now() + 3 * 24 * 60 * 60 * 1000,
+      });
+
+      //Saving it to the database
+      await user.save();
+    }
 
     //If incorrect return 400 error
     if (password !== user.verificationToken) {
